@@ -25,13 +25,31 @@ install(TARGETS testlib EXPORT testlibTarget
 )
 
 # Install files to use "find_package(testlib )"
-configure_file(testlibConfig-Version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/testlibConfig-Version.cmake @ONLY)
-install(FILES testlibConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/testlibConfig-Version.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/testlib)
-
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/testlib)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/testlibConfigVersion.cmake
+    VERSION ${LIB_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+configure_package_config_file(
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/testlibConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/testlibConfig.cmake
+    INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+)
+
+install(
+	FILES
+		${CMAKE_CURRENT_BINARY_DIR}/testlibConfig.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/testlibConfigVersion.cmake
+	DESTINATION ${INSTALL_CONFIGDIR}
+)
 
 install(EXPORT testlibTarget
 	FILE testlibTargets.cmake
 	NAMESPACE testlib::
 	DESTINATION ${INSTALL_CONFIGDIR}
 )
+
