@@ -53,3 +53,4 @@ install(EXPORT testlibTarget
 	DESTINATION ${INSTALL_CONFIGDIR}
 )
 
+add_library(testlib::testlib ALIAS testlib)
